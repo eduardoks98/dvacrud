@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\Usuarios;
+use App\Http\Requests\StoredUserRequest;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Redirect;
+use Symfony\Component\Console\Input\Input;
 
 class UsuariosController extends Controller
 {
@@ -113,17 +115,20 @@ class UsuariosController extends Controller
     }
 
     //Adiciona um novo usuario
-    public function novo(Request $req)
+    public function novo(StoredUserRequest $req)
     {
         $usuario = $req->all();
         $usuario['data_nascimento'] = $this->get_dt_nasc_novo_to_mysql($req);
+
         $usuario = Usuarios::create($usuario);
+
         return Redirect::to('/');
     }
 
     //Edita um  usuario
-    public function editar(Request $req, $id)
+    public function editar(StoredUserRequest $req, $id)
     {
+        $this->validate($req, $this->rules(), $this->messages());
         $usuario = Usuarios::findOrFail($id);
 
         $req_data = $req->all();
@@ -133,6 +138,7 @@ class UsuariosController extends Controller
         return Redirect::to('/');
     }
 
+    //Deleta um usuario
     public function deletar($id)
     {
         $usuario = Usuarios::findOrFail($id);
