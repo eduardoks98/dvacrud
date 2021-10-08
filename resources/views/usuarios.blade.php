@@ -1,32 +1,34 @@
-
-
+@extends('layouts.master')
+@section('content-title')
+Usuarios
+@endsection
+@section('content')
 <table class="table">
   <thead>
     <tr>
       <th scope="col">#</th>
-      <th scope="col">First</th>
-      <th scope="col">Last</th>
-      <th scope="col">Handle</th>
+      <th scope="col">Nome</th>
+      <th scope="col">Email</th>
+      <th scope="col">Idade</th>
+      <th scope="col">Telefone</th>
+      <th scope="col">Ações</th>
     </tr>
   </thead>
   <tbody>
+    @foreach($usuarios as $u)
+
     <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
+      <th scope="row">{{$u->id}}</th>
+      <td>{{$u->nome}}</td>
+      <td>{{$u->email}}</td>
+      <td>{{$u->idade}}</td>
+      <td>{{$u->telefone}}</td>
+      <td>
+        <button>Editar</button>
+        <button>Excluir</button>
+      </td>
     </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>Larry</td>
-      <td>the Bird</td>
-      <td>@twitter</td>
-    </tr>
+    @endforeach
   </tbody>
 </table>
+@endsection

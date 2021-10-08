@@ -3,15 +3,38 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Models\Usuarios;
+use Carbon\Carbon;
+
 
 class UsuariosController extends Controller
 {
 
-    public function index(){
-        return view('usuarios');
+    //Converte a data de nascimento para idade
+    public function getUsuarioIdade($user)
+    {
+        // Log::info($user);
+        return Carbon::parse($user['data_nascimento'])->age;
     }
-    
+
+    public function convertUsuariosToview($usuarios)
+    {
+        foreach ($usuarios as $u) {
+            $u['idade'] = $this->getUsuarioIdade($u);
+        }
+        Log::info($usuarios);
+        return $usuarios;
+    }
+
+
+
+    public function index()
+    {
+        $usuarios = Usuarios::get();
+        return view('usuarios', ['usuarios' => $this->convertUsuariosToview($usuarios)]);
+    }
+
     public function getUsuarios()
     {
         return response()->json(Usuarios::all(), 200);
@@ -42,7 +65,8 @@ class UsuariosController extends Controller
         return response($x, 200);
     }
 
-    public function delUsuario($id){
+    public function delUsuario($id)
+    {
         $x = Usuarios::find($id);
         if (is_null($x)) {
             return response()->json(['mensagem' => 'Nenhum usuário encontrado!'], 404);

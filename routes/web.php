@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\UsuariosController;
 /*
 |--------------------------------------------------------------------------
@@ -14,8 +16,6 @@ use App\Http\Controllers\UsuariosController;
 */
 
 Route::group(['middleware' => 'web'], function () {
-    Route::get('/', function () {
-        return view('welcome');
-    });
+    Route::get('/', [HomeController::class, 'index']);
 });
 Route::get('/usuarios', [UsuariosController::class, 'index']);
