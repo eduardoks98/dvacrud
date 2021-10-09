@@ -20,16 +20,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 //Retorna todos os usuarios
-Route::get('usuarios', [UsuariosController::class, 'getUsuarios']);
+Route::get('usuarios', [UsuariosController::class, 'get_all']);
 
 //Retorna um usuarios especifico
-Route::get('usuario/{id}', [UsuariosController::class, 'getUsuarioId']);
+Route::get('usuario/{id}', [UsuariosController::class, 'get_one']);
 
 //Novo Usuario
-Route::post('addusuario', [UsuariosController::class, 'addUsuario']);
+Route::post('addusuario', [UsuariosController::class, 'add']);
 
 //Atualizar Usuario
-Route::post('editusuario/{id}', [UsuariosController::class, 'editusuario']);
+Route::post('editusuario/{id}', [UsuariosController::class, 'edit']);
 
 //Deletar Usuario
-Route::delete("delUsuario/{id}", [UsuariosController::class, 'delUsuario']);
+Route::delete("delUsuario/{id}", [UsuariosController::class, 'delete']);

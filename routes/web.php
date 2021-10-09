@@ -4,6 +4,8 @@ use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UsuariosController;
+use App\Models\Usuarios;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,6 +18,12 @@ use App\Http\Controllers\UsuariosController;
 */
 
 Route::group(['middleware' => 'web'], function () {
-    Route::get('/', [HomeController::class, 'index']);
+    Route::get('/', [UsuariosController::class, 'index']);
+    Route::get('/usuarios/new', [UsuariosController::class, 'new']);
+    Route::get('/usuarios/update/{id}', [UsuariosController::class, 'update']);
 });
-Route::get('/usuarios', [UsuariosController::class, 'index']);
+
+
+Route::post('/usuarios/add', [UsuariosController::class, 'novo']);
+Route::post('/usuarios/edit/{id}', [UsuariosController::class, 'editar']);
+Route::delete('/usuarios/delete/{id}', [UsuariosController::class, 'deletar']);

@@ -6,41 +6,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\Usuarios;
 use Carbon\Carbon;
-
+use Illuminate\Support\Facades\Redirect;
 
 class UsuariosController extends Controller
 {
 
-    //Converte a data de nascimento para idade
-    public function getUsuarioIdade($user)
-    {
-        // Log::info($user);
-        return Carbon::parse($user['data_nascimento'])->age;
-    }
-
-    public function convertUsuariosToview($usuarios)
-    {
-        foreach ($usuarios as $u) {
-            $u['idade'] = $this->getUsuarioIdade($u);
-        }
-        Log::info($usuarios);
-        return $usuarios;
-    }
-
-
-
-    public function index()
-    {
-        $usuarios = Usuarios::get();
-        return view('usuarios', ['usuarios' => $this->convertUsuariosToview($usuarios)]);
-    }
-
-    public function getUsuarios()
+    /** USADO PARA API */
+    //Retorna todos os registros
+    public function get_all()
     {
         return response()->json(Usuarios::all(), 200);
     }
 
-    public function getUsuarioId($id)
+    //Retorna um usuario pelo id
+    public function get_one($id)
     {
         $x = Usuarios::find($id);
         if (is_null($x)) {
@@ -49,13 +28,15 @@ class UsuariosController extends Controller
         return response()->json($x, 200);
     }
 
-    public function addUsuario(Request $req)
+    //Adiciona um novo usuario
+    public function add(Request $req)
     {
         $x = Usuarios::create($req->all());
-        return response($x, 201);
+        return response()->json($x, 201);
     }
 
-    public function editUsuario(Request $req, $id)
+    //Edita um usuario pelo id
+    public function edit(Request $req, $id)
     {
         $x = Usuarios::find($id);
         if (is_null($x)) {
@@ -65,7 +46,8 @@ class UsuariosController extends Controller
         return response($x, 200);
     }
 
-    public function delUsuario($id)
+    //Deleta um usuario pelo id
+    public function delete($id)
     {
         $x = Usuarios::find($id);
         if (is_null($x)) {
@@ -73,5 +55,88 @@ class UsuariosController extends Controller
         }
         $x->delete();
         return response(null, 204);
+    }
+
+
+    //TESTE FRONTEND COM O PROPRIO LAVAREL
+    public function index()
+    {
+        $usuarios = Usuarios::get();
+        return view('usuarios.list', ['usuarios' => $this->convert_to_view($usuarios)]);
+    }
+
+    public function new()
+    {
+        return view('usuarios.new');
+    }
+
+    public function update($id)
+    {
+        $usuario = Usuarios::findOrFail($id);
+        $usuario['data_nascimento'] = $this->get_dt_nasc_to_view($usuario);
+        return view('usuarios.update', ['usuario' => $usuario]);
+    }
+
+    //Converte a data de nascimento para idade
+    public function get_idade($user)
+    {
+        // Log::info($user);
+        return Carbon::parse($user['data_nascimento'])->age;
+    }
+
+    //Converte a data de nascimento para o formato do mysql
+    public function get_dt_nasc_novo_to_mysql($user)
+    {
+        return Carbon::parse($user['data_nascimento'])->format('Y-m-d');
+    }
+    //Converte a data do input que contem / para - e coloca no formato do mysql
+    public function get_dt_nasc_editar_to_mysql($user)
+    {
+        return Carbon::createFromFormat('d/m/Y', $user['data_nascimento'])->format('Y-m-d');
+    }
+
+    //Converte a data de nascimento do formato do mysql para dia/mes/ano
+    public function get_dt_nasc_to_view($user)
+    {
+        // Log::info($user);
+        return Carbon::parse($user['data_nascimento'])->format('d-m-Y');
+    }
+
+    //Converte os dados para a view, nesse exemplo apenas adiciona o campo da idade
+    public function convert_to_view($usuarios)
+    {
+        foreach ($usuarios as $u) {
+            $u['idade'] = $this->get_idade($u);
+        }
+        // Log::info($usuarios);
+        return $usuarios;
+    }
+
+    //Adiciona um novo usuario
+    public function novo(Request $req)
+    {
+        $usuario = $req->all();
+        $usuario['data_nascimento'] = $this->get_dt_nasc_novo_to_mysql($req);
+        $usuario = Usuarios::create($usuario);
+        return Redirect::to('/');
+    }
+
+    //Edita um  usuario
+    public function editar(Request $req, $id)
+    {
+        $usuario = Usuarios::findOrFail($id);
+
+        $req_data = $req->all();
+        $req_data['data_nascimento'] = $this->get_dt_nasc_editar_to_mysql($req);
+
+        $usuario->update($req_data);
+        return Redirect::to('/');
+    }
+
+    public function deletar($id)
+    {
+        $usuario = Usuarios::findOrFail($id);
+        $usuario->delete();
+        return Redirect::to('/');
     }
 }

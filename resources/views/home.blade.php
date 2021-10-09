@@ -3,5 +3,5 @@
 Home
 @endsection
 @section('content')
-<a href="{{url('usuarios')}}">IR PARA USUAsRIO</a>
+<a href="{{url('usuarios')}}">Lista de usuários</a>
 @endsection

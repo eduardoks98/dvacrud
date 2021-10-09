@@ -1,0 +1,9 @@
+.user-title{
+    font-size: 32px;
+    border-bottom: 1px solid black;
+}
+
+/* data tables */
+.dataTables_wrapper{
+    width: 100%;
+}
