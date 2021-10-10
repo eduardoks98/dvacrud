@@ -7,22 +7,29 @@
 @endsection
 
 @section('content')
+
 <div class="container">
-  <div class="row ">
-    <a href="{{url('usuarios/new')}}" class="btn btn-info mt-2 mb-2">Adicionar</a>
-  </div>
-  <div class="row">
-    <div class="input-group">
-      <input type="text" class="form-control mb-2" id="table-search">
+  <div class="form-row ">
+    <a href="{{url('usuarios/new')}}" class="btn btn-primary mt-2 col">Adicionar</a>
+    <div class="input-group col-md-10 mt-2">
       <div class="input-group-prepend">
-        <span class=" btn btn-info mb-2">Pesquisar</span>
+        <span class=" btn btn-primary "><i class="fas fa-search"></i></span>
       </div>
+
+      <input type="text" class="form-control" id="table-search">
 
     </div>
   </div>
-  <div class="row">
-    <table class="table display" id="user-table">
-      <thead>
+  <div class="row session-message">
+    @if (session('message'))
+    <div class="col-md-12 alert alert-success">
+      {{ session('message') }}
+    </div>
+    @endif
+  </div>
+  <div class="row mt-2">
+    <table class="table display table-striped" id="user-table">
+      <thead class="thead-dark">
         <tr>
           <th scope="col">#</th>
           <th scope="col">Nome</th>
@@ -39,16 +46,16 @@
           <th scope="row">{{$u->id}}</th>
           <td>{{$u->nome}}</td>
           <td>{{$u->email}}</td>
-          <td>{{$u->idade}}</td>
+          <td>{{$u->idade}} anos</td>
           <td class="phone-mask">{{$u->telefone}}</td>
           <td>
-            <div class="d-flex">
-              <a href="{{url('usuarios/update')}}/{{ $u->id }}" class="btn btn-warning mb-2 mr-2">Editar</a>
+            <div class="d-flex ">
+              <a href="{{url('usuarios/update')}}/{{ $u->id }}" class="btn btn-warning mr-2">Editar</a>
 
               <form action="usuarios/delete/{{$u->id}}" method="POST">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="btn btn-danger mb-2">Excluir</button>
+                <button type="submit" class="btn btn-danger">Excluir</button>
               </form>
             </div>
 

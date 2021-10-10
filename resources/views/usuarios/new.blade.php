@@ -2,7 +2,7 @@
 
 @section('content-title')
 <div class="col-md-12 mb-2">
-  Adicionar Usuário
+<button class="btn btn-primary" onclick="window.location='{{ url('/') }}'"><i class="fas fa-arrow-left"></i></button> Adicionar Usuário
 </div>
 @endsection
 

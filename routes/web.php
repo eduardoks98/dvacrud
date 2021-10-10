@@ -17,13 +17,12 @@ use App\Models\Usuarios;
 |
 */
 
-Route::group(['middleware' => 'web'], function () {
-    Route::get('/', [UsuariosController::class, 'index']);
-    Route::get('/usuarios/new', [UsuariosController::class, 'new']);
-    Route::get('/usuarios/update/{id}', [UsuariosController::class, 'update']);
-});
+//Views routes
+Route::get('/', [UsuariosController::class, 'index']);
+Route::get('/usuarios/new', [UsuariosController::class, 'new']);
+Route::get('/usuarios/update/{id}', [UsuariosController::class, 'update']);
 
-
+//Database routes
 Route::post('/usuarios/add', [UsuariosController::class, 'novo']);
 Route::post('/usuarios/edit/{id}', [UsuariosController::class, 'editar']);
 Route::delete('/usuarios/delete/{id}', [UsuariosController::class, 'deletar']);

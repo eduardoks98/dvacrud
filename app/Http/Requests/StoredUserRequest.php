@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\DDDPhone;
 use App\Rules\FullName;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -27,8 +28,8 @@ class StoredUserRequest extends FormRequest
         return [
             'nome' => ['required', 'max:190', new FullName],
             'email' => ['required', 'max:190'],
-            'data_nascimento' => ['required', 'max:190', 'date'],
-            'telefone' => ['required', 'max:190'],
+            'data_nascimento' => ['required', 'date_format:d/m/Y','before:today'],
+            'telefone' => ['required', new DDDPhone],
         ];
     }
     /**
@@ -46,6 +47,8 @@ class StoredUserRequest extends FormRequest
             'email.max' => 'Não pode ser maior :max caracteres!',
 
             'data_nascimento.required' => 'Data de nascimento obrigatório!',
+            'data_nascimento.date_format' => 'Data de nascimento com formato inválido! (:format)',
+            'data_nascimento.before' => 'Data nascimento inválido!',
             
 
             'telefone.required' => 'Telefone obrigatório!',
